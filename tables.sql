@@ -10,7 +10,7 @@ CREATE TABLE pay_periods (
   id SERIAL PRIMARY KEY,
   started_on date NOT NULL,
   ended_on date NOT NULL,
-  user_id integer REFERENCES users(id)
+  user_id integer NOT NULL REFERENCES users(id)
 );
 
 CREATE UNIQUE INDEX pay_periods_pkey ON pay_periods(id int4_ops);
@@ -26,8 +26,8 @@ CREATE UNIQUE INDEX projects_pkey ON projects(id int4_ops);
 -- work_blocks joins pay_periods and projects --
 CREATE TABLE work_blocks (
   id SERIAL PRIMARY KEY,
-  project_id integer REFERENCES projects(id),
-  pay_period_id integer REFERENCES pay_periods(id),
+  project_id integer NOT NULL REFERENCES projects(id),
+  pay_period_id integer NOT NULL REFERENCES pay_periods(id),
   hours numeric NOT NULL
 );
 

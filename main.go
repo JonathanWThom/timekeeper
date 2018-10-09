@@ -1,16 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"net/http"
+)
 
 func main() {
 	var server server
 	server.init()
-
-	// TODO: REMOVE THIS
-	project, err := server.createProject()
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(project)
-	}
+	log.Fatal(http.ListenAndServe(":8000", server.router))
 }

@@ -1,9 +1,13 @@
 package main
 
-import "database/sql"
+import (
+	"database/sql"
+	"github.com/gorilla/mux"
+)
 
 type server struct {
-	db *sql.DB
+	db     *sql.DB
+	router *mux.Router
 }
 
 func (s *server) init() {
@@ -18,4 +22,6 @@ func (s *server) init() {
 	}
 
 	s.db = db
+	s.router = mux.NewRouter()
+	s.routes()
 }

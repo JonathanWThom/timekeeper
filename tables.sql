@@ -17,8 +17,8 @@ CREATE UNIQUE INDEX pay_periods_pkey ON pay_periods(id int4_ops);
 
 CREATE TABLE projects (
   id SERIAL PRIMARY KEY,
-  name text NOT NULL,
-  code text NOT NULL
+  name text NOT NULL UNIQUE,
+  code text NOT NULL UNIQUE
 );
 
 CREATE UNIQUE INDEX projects_pkey ON projects(id int4_ops);

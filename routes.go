@@ -7,4 +7,7 @@ func (s *server) routes() {
 	s.router.HandleFunc("/projects/{id}", s.projectsUpdateHandler).Methods("PATCH")
 	s.router.HandleFunc("/projects/{id}", s.projectsDeleteHandler).Methods("DELETE")
 	s.router.HandleFunc("/projects", s.projectsIndexHandler).Methods("GET")
+
+	// PayPeriods
+	s.router.HandleFunc("/pay_periods", s.payPeriodsCreateHandler).Methods("POST")
 }

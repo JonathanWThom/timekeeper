@@ -35,14 +35,15 @@ func (s *server) showProject(project *Project) error {
 }
 
 func (s *server) updateProject(project *Project) error {
-	// strip out nil values?
+	// Strip out nil values?
+
 	sql := `
 		UPDATE projects
-		SET column1=$1, column2=$2
+		SET name=$1, code=$2
 		WHERE id=$3
 		RETURNING id, name, code
 	`
-	err := s.db.QueryRow(sql, project.Name, project.Code).
+	err := s.db.QueryRow(sql, project.Name, project.Code, project.ID).
 		Scan(&project.ID, &project.Name, &project.Code)
 	if err != nil {
 		return err

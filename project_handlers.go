@@ -50,6 +50,15 @@ func (s *server) projectUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	project.ID = id
+
 	err = s.updateProject(project)
 	if err != nil {
 		jsonError(err, w, r)

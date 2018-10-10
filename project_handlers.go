@@ -69,14 +69,15 @@ func (s *server) projectUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) projectDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	var project = &Project{}
-	err := json.NewDecoder(r.Body).Decode(project)
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		jsonError(err, w, r)
 		return
 	}
 
-	err = s.deleteProject(project)
+	project := Project{ID: id}
+	err = s.deleteProject(&project)
 	if err != nil {
 		jsonError(err, w, r)
 		return

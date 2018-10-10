@@ -65,26 +65,27 @@ func (s *server) deleteProject(project *Project) error {
 	return nil
 }
 
-func (s *server) indexProjects(projects []*Project) error {
+func (s *server) indexProjects() ([]Project, error) {
 	sql := `
 		SELECT id, name, code
 		FROM projects
 	`
 	rows, err := s.db.Query(sql)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	defer rows.Close()
+	var projects = []Project{}
 	for rows.Next() {
-		project := &Project{}
+		project := Project{}
 		err := rows.Scan(&project.ID, &project.Name, &project.Code)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		projects = append(projects, project)
 	}
 
-	return nil
+	return projects, nil
 }

@@ -2,8 +2,9 @@ package main
 
 func (s *server) routes() {
 	// Projects
-	s.router.HandleFunc("/projects", s.projectCreateHandler).Methods("POST")
-	s.router.HandleFunc("/projects/{id}", s.projectShowHandler).Methods("GET")
-	s.router.HandleFunc("/projects/{id}", s.projectUpdateHandler).Methods("PATCH")
-	s.router.HandleFunc("/projects/{id}", s.projectDeleteHandler).Methods("DELETE")
+	s.router.HandleFunc("/projects", s.projectsCreateHandler).Methods("POST")
+	s.router.HandleFunc("/projects/{id}", s.projectsShowHandler).Methods("GET")
+	s.router.HandleFunc("/projects/{id}", s.projectsUpdateHandler).Methods("PATCH")
+	s.router.HandleFunc("/projects/{id}", s.projectsDeleteHandler).Methods("DELETE")
+	s.router.HandleFunc("/projects", s.projectsIndexHandler).Methods("GET")
 }

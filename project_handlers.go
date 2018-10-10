@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func (s *server) projectCreateHandler(w http.ResponseWriter, r *http.Request) {
+func (s *server) projectsCreateHandler(w http.ResponseWriter, r *http.Request) {
 	var project = &Project{}
 	err := json.NewDecoder(r.Body).Decode(project)
 	if err != nil {
@@ -24,7 +24,7 @@ func (s *server) projectCreateHandler(w http.ResponseWriter, r *http.Request) {
 	jsonSuccess(project, w, r)
 }
 
-func (s *server) projectShowHandler(w http.ResponseWriter, r *http.Request) {
+func (s *server) projectsShowHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -42,7 +42,7 @@ func (s *server) projectShowHandler(w http.ResponseWriter, r *http.Request) {
 	jsonSuccess(project, w, r)
 }
 
-func (s *server) projectUpdateHandler(w http.ResponseWriter, r *http.Request) {
+func (s *server) projectsUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	var project = &Project{}
 	err := json.NewDecoder(r.Body).Decode(project)
 	if err != nil {
@@ -68,7 +68,7 @@ func (s *server) projectUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	jsonSuccess(project, w, r)
 }
 
-func (s *server) projectDeleteHandler(w http.ResponseWriter, r *http.Request) {
+func (s *server) projectsDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -87,8 +87,7 @@ func (s *server) projectDeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) projectsIndexHandler(w http.ResponseWriter, r *http.Request) {
-	var projects = []*Project{}
-	err := s.indexProjects(projects)
+	projects, err := s.indexProjects()
 	if err != nil {
 		jsonError(err, w, r)
 		return

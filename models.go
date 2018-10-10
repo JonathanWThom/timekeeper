@@ -5,3 +5,6 @@ type Project struct {
 	Name string `json:"name" db:"name"`
 	Code string `json:"code" db:"code"`
 }
+
+type PayPeriod struct {
+}

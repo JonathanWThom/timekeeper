@@ -28,7 +28,9 @@ CREATE TABLE work_blocks (
   id SERIAL PRIMARY KEY,
   project_id integer NOT NULL REFERENCES projects(id),
   pay_period_id integer NOT NULL REFERENCES pay_periods(id),
-  hours numeric NOT NULL
+  hours numeric NOT NULL,
+  started_at timestamp without time zone NOT NULL,
+  ended_at timestamp without time zone NOT NULL
 );
 
 CREATE UNIQUE INDEX work_blocks_pkey ON work_blocks(id int4_ops);

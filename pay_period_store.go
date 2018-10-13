@@ -69,3 +69,29 @@ func (s *server) deletePayPeriod(payPeriod *PayPeriod) error {
 
 	return nil
 }
+
+func (s *server) indexPayPeriods(userID int) ([]PayPeriod, error) {
+	sql := `
+		SELECT id, started_on, ended_on, user_id
+		FROM pay_periods
+		WHERE user_id=$1
+	`
+	rows, err := s.db.Query(sql, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	var payPeriods = []PayPeriod{}
+	for rows.Next() {
+		payPeriod := PayPeriod{}
+		err := rows.Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		payPeriods = append(payPeriods, payPeriod)
+	}
+
+	return payPeriods, nil
+}

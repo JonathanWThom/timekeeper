@@ -113,3 +113,20 @@ func (s *server) payPeriodsDeleteHandler(w http.ResponseWriter, r *http.Request)
 
 	jsonSuccess(payPeriod, w, r)
 }
+
+func (s *server) payPeriodsIndexHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userID, err := strconv.Atoi(vars["user_id"])
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	payPeriods, err := s.indexPayPeriods(int(userID))
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	jsonSuccess(payPeriods, w, r)
+}

@@ -18,3 +18,19 @@ func (s *server) createPayPeriod(payPeriod *PayPeriod) error {
 
 	return nil
 }
+
+func (s *server) showPayPeriod(payPeriod *PayPeriod) error {
+	sql := `
+		SELECT id, started_on, ended_on, user_id
+		FROM pay_periods
+		WHERE user_id=$1
+		AND id=$2
+	`
+	err := s.db.QueryRow(sql, payPeriod.UserID, payPeriod.ID).
+		Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

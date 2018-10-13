@@ -11,7 +11,7 @@ func (s *server) createPayPeriod(payPeriod *PayPeriod) error {
 		RETURNING id, started_on, ended_on, user_id
 	`
 	err := s.db.QueryRow(sql, payPeriod.StartedOn, payPeriod.EndedOn, payPeriod.UserID).
-		Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn)
+		Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
 	if err != nil {
 		return err
 	}

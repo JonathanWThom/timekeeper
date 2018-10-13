@@ -27,16 +27,16 @@ type WorkBlock struct {
 	EndedAt     string `json:"ended_at" db:"ended_at"`     // stored as timestamp in db
 }
 
-func (w *WorkBlock) hours() (error, int) {
+func (w *WorkBlock) hours() (int, error) {
 	layout := "2006-01-02T15:04:05.000Z"
 	end, err := time.Parse(layout, w.EndedAt)
 	if err != nil {
-		return err, 0
+		return 0, err
 	}
 	start, err := time.Parse(layout, w.StartedAt)
 	if err != nil {
-		return err, 0
+		return 0, err
 	}
 
-	return nil, int(end.Sub(start))
+	return int(end.Sub(start)), nil
 }

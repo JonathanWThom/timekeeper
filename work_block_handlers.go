@@ -29,7 +29,7 @@ func (s *server) workBlocksCreateHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	err, hours := workBlock.hours()
+	hours, err := workBlock.hours()
 	if err != nil {
 		jsonError(err, w, r)
 		return

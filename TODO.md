@@ -16,5 +16,7 @@
 
 * Can an array of struct pointers be passed into index handlers, so that it is more
 on par with other actions?
+  - PayPeriodsIndexHandler
+    1. Should ID be part of an object instead of an argument?
 
 * Should projects be limited by user, or user group maybe?

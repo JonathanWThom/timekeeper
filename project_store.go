@@ -56,8 +56,10 @@ func (s *server) deleteProject(project *Project) error {
 	sql := `
 		DELETE FROM projects
 		WHERE id=$1
+		RETURNING id, name, code
 	`
-	_, err := s.db.Query(sql, project.ID)
+	err := s.db.QueryRow(sql, project.ID).
+		Scan(&project.ID, &project.Name, &project.Code)
 	if err != nil {
 		return err
 	}

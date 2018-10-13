@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 // Project lives on the projects table
 type Project struct {
 	ID   int    `json:"id" db:"id"`
@@ -13,4 +15,28 @@ type PayPeriod struct {
 	StartedOn string `json:"started_on" db:"started_on"` // stored as date in db
 	EndedOn   string `json:"ended_on" db:"ended_on"`     // stored as date in db
 	UserID    int    `json:"user_id" db:"user_id"`
+}
+
+// WorkBlock lives on the work_blocks table
+type WorkBlock struct {
+	ID          int    `json:"id" db:"id"`
+	ProjectID   int    `json:"project_id" db:"project_id"`
+	PayPeriodID int    `json:"pay_period_id" db:"pay_period_id"`
+	Hours       int    `json:"hours" db:"hours"`
+	StartedAt   string `json:"started_at" db:"started_at"` // store as timestamp in db - should I make it time here?
+	EndedAt     string `json:"ended_at" db:"ended_at"`     // stored as timestamp in db
+}
+
+func (w *WorkBlock) hours() (error, int) {
+	layout := "2006-01-02T15:04:05.000Z"
+	end, err := time.Parse(layout, w.EndedAt)
+	if err != nil {
+		return err, 0
+	}
+	start, err := time.Parse(layout, w.StartedAt)
+	if err != nil {
+		return err, 0
+	}
+
+	return nil, int(end.Sub(start))
 }

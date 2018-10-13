@@ -1,3 +1,8 @@
+* REMEMBER: Hours should be calculated by start/end time for a work period, and
+then returned. Not received as params
+
+* Tests. I really should test this time, at the very least, for the learning experience.
+
 * Validations for pay period started_on being before ended_on
   - Do this on the db level?
 

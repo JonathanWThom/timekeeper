@@ -14,4 +14,12 @@ func (s *server) routes() {
 	s.router.HandleFunc("/users/{user_id}/pay_periods/{id}", s.payPeriodsUpdateHandler).Methods("PATCH")
 	s.router.HandleFunc("/users/{user_id}/pay_periods/{id}", s.payPeriodsDeleteHandler).Methods("DELETE")
 	s.router.HandleFunc("/users/{user_id}/pay_periods", s.payPeriodsIndexHandler).Methods("GET")
+
+	// WorkBlocks
+	// project_id and user_id are both received from request body, not url params
+	s.router.HandleFunc("/pay_periods/{pay_period_id}/work_blocks", s.workBlocksCreateHandler).Methods("POST")
+	// s.router.HandleFunc("/pay_periods/{user_id}/work_blocks/{id}", s.workBlocksShowHandler).Methods("GET")
+	// s.router.HandleFunc("/pay_periods/{user_id}/work_blocks/{id}", s.workBlocksUpdateHandler).Methods("PATCH")
+	// s.router.HandleFunc("/pay_periods/{user_id}/work_blocks/{id}", s.workBlocksDeleteHandler).Methods("DELETE")
+	// s.router.HandleFunc("/pay_periods/{user_id}/work_blocks", s.workBlocksIndexHandler).Methods("GET")
 }

@@ -53,3 +53,17 @@ func (s *server) updatePayPeriod(payPeriod *PayPeriod) error {
 
 	return nil
 }
+
+func (s *server) deletePayPeriod(payPeriod *PayPeriod) error {
+	sql := `
+		DELETE FROM pay_periods
+		WHERE user_id=$1
+		AND id=$2
+	`
+	_, err := s.db.Query(sql, payPeriod.UserID, payPeriod.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

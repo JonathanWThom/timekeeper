@@ -12,4 +12,5 @@ func (s *server) routes() {
 	s.router.HandleFunc("/users/{user_id}/pay_periods", s.payPeriodsCreateHandler).Methods("POST")
 	s.router.HandleFunc("/users/{user_id}/pay_periods/{id}", s.payPeriodsShowHandler).Methods("GET")
 	s.router.HandleFunc("/users/{user_id}/pay_periods/{id}", s.payPeriodsUpdateHandler).Methods("PATCH")
+	s.router.HandleFunc("/users/{user_id}/pay_periods/{id}", s.payPeriodsDeleteHandler).Methods("DELETE")
 }

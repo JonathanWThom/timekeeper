@@ -1,3 +1,9 @@
+* WORKING ON:
+  - Don't let end date of work block be after end of pay period.
+    - Make sure the pay period ranges cover the whole day, so it doesn't throw errors on the last day.
+      May have to do make last day go to 11:59? not sure.
+  - Make sure that start cannot be after end for both work blocks and pay periods
+
 * REMEMBER: Hours should be calculated by start/end time for a work period, and
 then returned. Not received as params
 

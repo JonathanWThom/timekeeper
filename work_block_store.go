@@ -107,3 +107,35 @@ func (s *server) deleteWorkBlock(workBlock *WorkBlock) error {
 
 	return nil
 }
+
+func (s *server) indexWorkBlocks(payPeriodID int) ([]WorkBlock, error) {
+	sql := `
+		SELECT *
+		FROM work_blocks
+		WHERE pay_period_id=$1
+	`
+	rows, err := s.db.Query(sql, payPeriodID)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	var workBlocks = []WorkBlock{}
+	for rows.Next() {
+		workBlock := WorkBlock{}
+		err := rows.Scan(
+			&workBlock.ID,
+			&workBlock.ProjectID,
+			&workBlock.PayPeriodID,
+			&workBlock.Hours,
+			&workBlock.StartedAt,
+			&workBlock.EndedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		workBlocks = append(workBlocks, workBlock)
+	}
+
+	return workBlocks, nil
+}

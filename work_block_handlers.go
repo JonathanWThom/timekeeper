@@ -137,3 +137,21 @@ func (s *server) workBlocksDeleteHandler(w http.ResponseWriter, r *http.Request)
 
 	jsonSuccess(workBlock, w, r)
 }
+
+func (s *server) workBlocksIndexHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	payPeriodID, err := strconv.Atoi(vars["pay_period_id"])
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	workBlocks, err := s.indexWorkBlocks(payPeriodID)
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	jsonSuccess(workBlocks, w, r)
+}

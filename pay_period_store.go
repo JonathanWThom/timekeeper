@@ -6,12 +6,12 @@ import (
 
 func (s *server) createPayPeriod(payPeriod *PayPeriod) error {
 	sql := `
-		INSERT INTO pay_periods(started_on, ended_on, user_id)
+		INSERT INTO pay_periods(started_at, ended_at, user_id)
 		VALUES($1, $2, $3)
-		RETURNING id, started_on, ended_on, user_id
+		RETURNING id, started_at, ended_at, user_id
 	`
-	err := s.db.QueryRow(sql, payPeriod.StartedOn, payPeriod.EndedOn, payPeriod.UserID).
-		Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
+	err := s.db.QueryRow(sql, payPeriod.StartedAt, payPeriod.EndedAt, payPeriod.UserID).
+		Scan(&payPeriod.ID, &payPeriod.StartedAt, &payPeriod.EndedAt, &payPeriod.UserID)
 	if err != nil {
 		return err
 	}
@@ -21,13 +21,13 @@ func (s *server) createPayPeriod(payPeriod *PayPeriod) error {
 
 func (s *server) showPayPeriod(payPeriod *PayPeriod) error {
 	sql := `
-		SELECT id, started_on, ended_on, user_id
+		SELECT id, started_at, ended_at, user_id
 		FROM pay_periods
 		WHERE user_id=$1
 		AND id=$2
 	`
 	err := s.db.QueryRow(sql, payPeriod.UserID, payPeriod.ID).
-		Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
+		Scan(&payPeriod.ID, &payPeriod.StartedAt, &payPeriod.EndedAt, &payPeriod.UserID)
 	if err != nil {
 		return err
 	}
@@ -40,13 +40,13 @@ func (s *server) updatePayPeriod(payPeriod *PayPeriod) error {
 
 	sql := `
 		UPDATE pay_periods
-		SET started_on=$1, ended_on=$2
+		SET started_at=$1, ended_at=$2
 		WHERE user_id=$3
 		AND id=$4
-		RETURNING id, started_on, ended_on, user_id
+		RETURNING id, started_at, ended_at, user_id
 	`
-	err := s.db.QueryRow(sql, payPeriod.StartedOn, payPeriod.EndedOn, payPeriod.UserID, payPeriod.ID).
-		Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
+	err := s.db.QueryRow(sql, payPeriod.StartedAt, payPeriod.EndedAt, payPeriod.UserID, payPeriod.ID).
+		Scan(&payPeriod.ID, &payPeriod.StartedAt, &payPeriod.EndedAt, &payPeriod.UserID)
 	if err != nil {
 		return err
 	}
@@ -59,10 +59,10 @@ func (s *server) deletePayPeriod(payPeriod *PayPeriod) error {
 		DELETE FROM pay_periods
 		WHERE user_id=$1
 		AND id=$2
-		RETURNING id, started_on, ended_on, user_id
+		RETURNING id, started_at, ended_at, user_id
 	`
 	err := s.db.QueryRow(sql, payPeriod.UserID, payPeriod.ID).
-		Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
+		Scan(&payPeriod.ID, &payPeriod.StartedAt, &payPeriod.EndedAt, &payPeriod.UserID)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (s *server) deletePayPeriod(payPeriod *PayPeriod) error {
 
 func (s *server) indexPayPeriods(userID int) ([]PayPeriod, error) {
 	sql := `
-		SELECT id, started_on, ended_on, user_id
+		SELECT id, started_at, ended_at, user_id
 		FROM pay_periods
 		WHERE user_id=$1
 	`
@@ -85,7 +85,7 @@ func (s *server) indexPayPeriods(userID int) ([]PayPeriod, error) {
 	var payPeriods = []PayPeriod{}
 	for rows.Next() {
 		payPeriod := PayPeriod{}
-		err := rows.Scan(&payPeriod.ID, &payPeriod.StartedOn, &payPeriod.EndedOn, &payPeriod.UserID)
+		err := rows.Scan(&payPeriod.ID, &payPeriod.StartedAt, &payPeriod.EndedAt, &payPeriod.UserID)
 		if err != nil {
 			return nil, err
 		}

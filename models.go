@@ -12,8 +12,8 @@ type Project struct {
 // PayPeriod lives on the pay_periods table
 type PayPeriod struct {
 	ID        int    `json:"id" db:"id"`
-	StartedOn string `json:"started_on" db:"started_on"` // stored as date in db
-	EndedOn   string `json:"ended_on" db:"ended_on"`     // stored as date in db
+	StartedAt string `json:"started_at" db:"started_at"` // stored as date in db
+	EndedAt   string `json:"ended_at" db:"ended_at"`     // stored as date in db
 	UserID    int    `json:"user_id" db:"user_id"`
 }
 

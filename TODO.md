@@ -9,7 +9,7 @@ then returned. Not received as params
 
 * Tests. I really should test this time, at the very least, for the learning experience.
 
-* Validations for pay period started_on being before ended_on
+* Validations for pay period started_at being before ended_at
   - Do this on the db level?
 
 * Handle nil values being sent to update actions

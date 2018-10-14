@@ -1,18 +1,18 @@
 CREATE DATABASE timekeeper;
 
 CREATE OR REPLACE FUNCTION ValidStart(started_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
-	DECLARE started_on DATE;
+	DECLARE started_at DATE;
     BEGIN
-  		SELECT pay_periods.started_on INTO started_on FROM pay_periods WHERE id=$2;
-        RETURN $1 > started_on;
+  		SELECT pay_periods.started_at INTO started_at FROM pay_periods WHERE id=$2;
+        RETURN $1 > started_at;
     END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ValidEnd(ended_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
-	DECLARE ended_on DATE;
+	DECLARE ended_at DATE;
     BEGIN
-  		SELECT pay_periods.ended_on INTO ended_on FROM pay_periods WHERE id=$2;
-          RETURN $1 < ended_on;
+  		SELECT pay_periods.ended_at INTO ended_at FROM pay_periods WHERE id=$2;
+          RETURN $1 < ended_at;
     END;
 $$ LANGUAGE plpgsql;
 
@@ -24,8 +24,8 @@ CREATE UNIQUE INDEX users_pkey ON users(id int4_ops);
 
 CREATE TABLE pay_periods (
   id SERIAL PRIMARY KEY,
-  started_on date NOT NULL,
-  ended_on date NOT NULL,
+  started_at timestamp without time zone NOT NULL,
+  ended_at timestamp without time zone NOT NULL,
   user_id integer NOT NULL REFERENCES users(id)
 );
 

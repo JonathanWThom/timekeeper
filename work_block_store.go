@@ -5,7 +5,6 @@ import (
 )
 
 func (s *server) createWorkBlock(workBlock *WorkBlock) error {
-	// validate that work block is within pay period
 	sql := `
 		INSERT INTO work_blocks(project_id, pay_period_id, hours, started_at, ended_at)
 		VALUES($1, $2, $3, $4, $5)

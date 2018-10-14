@@ -26,7 +26,8 @@ CREATE TABLE pay_periods (
   id SERIAL PRIMARY KEY,
   started_at timestamp without time zone NOT NULL,
   ended_at timestamp without time zone NOT NULL,
-  user_id integer NOT NULL REFERENCES users(id)
+  user_id integer NOT NULL REFERENCES users(id),
+  CONSTRAINT started_before_ended_check CHECK (started_at < ended_at)
 );
 
 CREATE UNIQUE INDEX pay_periods_pkey ON pay_periods(id int4_ops);
@@ -48,6 +49,7 @@ CREATE TABLE work_blocks (
   started_at timestamp without time zone NOT NULL,
   ended_at timestamp without time zone NOT NULL,
   CONSTRAINT valid_start_check CHECK (validstart(started_at, pay_period_id)),
+  CONSTRAINT valid_end_check CHECK (validend(ended_at, pay_period_id)),
   CONSTRAINT valid_end_check CHECK (validend(ended_at, pay_period_id))
 );
 

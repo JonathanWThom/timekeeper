@@ -30,3 +30,26 @@ func (s *server) createWorkBlock(workBlock *WorkBlock) error {
 
 	return nil
 }
+
+func (s *server) showWorkBlock(workBlock *WorkBlock) error {
+	// Should I only search by id?
+	sql := `
+		SELECT *
+		FROM work_blocks
+		WHERE id=$1
+		AND pay_period_id=$2
+	`
+	err := s.db.QueryRow(sql, workBlock.ID, workBlock.PayPeriodID).
+		Scan(
+			&workBlock.ID,
+			&workBlock.ProjectID,
+			&workBlock.PayPeriodID,
+			&workBlock.Hours,
+			&workBlock.StartedAt,
+			&workBlock.EndedAt)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

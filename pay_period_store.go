@@ -37,7 +37,6 @@ func (s *server) showPayPeriod(payPeriod *PayPeriod) error {
 
 func (s *server) updatePayPeriod(payPeriod *PayPeriod) error {
 	// Strip out nil values?
-
 	sql := `
 		UPDATE pay_periods
 		SET started_at=$1, ended_at=$2

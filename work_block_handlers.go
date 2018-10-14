@@ -111,3 +111,29 @@ func (s *server) workBlocksUpdateHandler(w http.ResponseWriter, r *http.Request)
 
 	jsonSuccess(workBlock, w, r)
 }
+
+func (s *server) workBlocksDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	payPeriodID, err := strconv.Atoi(vars["pay_period_id"])
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	workBlock := WorkBlock{PayPeriodID: int(payPeriodID), ID: int(id)}
+
+	err = s.deleteWorkBlock(&workBlock)
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	jsonSuccess(workBlock, w, r)
+}

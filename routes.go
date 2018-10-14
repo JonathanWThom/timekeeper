@@ -20,6 +20,6 @@ func (s *server) routes() {
 	s.router.HandleFunc("/pay_periods/{pay_period_id}/work_blocks", s.workBlocksCreateHandler).Methods("POST")
 	s.router.HandleFunc("/pay_periods/{pay_period_id}/work_blocks/{id}", s.workBlocksShowHandler).Methods("GET")
 	s.router.HandleFunc("/pay_periods/{pay_period_id}/work_blocks/{id}", s.workBlocksUpdateHandler).Methods("PATCH")
-	// s.router.HandleFunc("/pay_periods/{user_id}/work_blocks/{id}", s.workBlocksDeleteHandler).Methods("DELETE")
+	s.router.HandleFunc("/pay_periods/{pay_period_id}/work_blocks/{id}", s.workBlocksDeleteHandler).Methods("DELETE")
 	// s.router.HandleFunc("/pay_periods/{user_id}/work_blocks", s.workBlocksIndexHandler).Methods("GET")
 }

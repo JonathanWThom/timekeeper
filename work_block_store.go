@@ -82,3 +82,28 @@ func (s *server) updateWorkBlock(workBlock *WorkBlock) error {
 
 	return nil
 }
+
+func (s *server) deleteWorkBlock(workBlock *WorkBlock) error {
+	sql := `
+		DELETE FROM work_blocks
+		WHERE pay_period_id=$1
+		AND id=$2
+		RETURNING id, project_id, pay_period_id, hours, started_at, ended_at
+	`
+	err := s.db.QueryRow(
+		sql,
+		workBlock.PayPeriodID,
+		workBlock.ID).
+		Scan(
+			&workBlock.ID,
+			&workBlock.ProjectID,
+			&workBlock.PayPeriodID,
+			&workBlock.Hours,
+			&workBlock.StartedAt,
+			&workBlock.EndedAt)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

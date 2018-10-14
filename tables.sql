@@ -8,6 +8,14 @@ CREATE OR REPLACE FUNCTION ValidStart(started_at TIMESTAMP, pay_period_id INT) R
     END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION ValidEnd(ended_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
+	DECLARE ended_on DATE;
+    BEGIN
+  		SELECT pay_periods.ended_on INTO ended_on FROM pay_periods WHERE id=$2;
+          RETURN $1 < ended_on;
+    END;
+$$ LANGUAGE plpgsql;
+
 CREATE TABLE users (
   id SERIAL PRIMARY KEY
 );
@@ -39,7 +47,8 @@ CREATE TABLE work_blocks (
   hours numeric NOT NULL,
   started_at timestamp without time zone NOT NULL,
   ended_at timestamp without time zone NOT NULL,
-  CONSTRAINT valid_start_check CHECK (validstart(started_at, pay_period_id))
+  CONSTRAINT valid_start_check CHECK (validstart(started_at, pay_period_id)),
+  CONSTRAINT valid_end_check CHECK (validend(ended_at, pay_period_id))
 );
 
 CREATE UNIQUE INDEX work_blocks_pkey ON work_blocks(id int4_ops);

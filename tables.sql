@@ -1,19 +1,19 @@
 CREATE DATABASE timekeeper;
 
 CREATE OR REPLACE FUNCTION ValidStart(started_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
-	DECLARE started_at DATE;
-    BEGIN
-  		SELECT pay_periods.started_at INTO started_at FROM pay_periods WHERE id=$2;
-        RETURN $1 > started_at;
-    END;
+		DECLARE started_at DATE;
+        BEGIN
+        		SELECT pay_periods.started_at INTO started_at FROM pay_periods WHERE id=$2;
+                RETURN started_at <= $1;
+        END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ValidEnd(ended_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
-	DECLARE ended_at DATE;
-    BEGIN
-  		SELECT pay_periods.ended_at INTO ended_at FROM pay_periods WHERE id=$2;
-          RETURN $1 < ended_at;
-    END;
+		DECLARE ended_at DATE;
+        BEGIN
+        		SELECT pay_periods.ended_at INTO ended_at FROM pay_periods WHERE id=$2;
+                RETURN $1 <= ended_at;
+        END;
 $$ LANGUAGE plpgsql;
 
 CREATE TABLE users (

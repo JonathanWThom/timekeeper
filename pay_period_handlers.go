@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -12,6 +13,12 @@ func (s *server) payPeriodsCreateHandler(w http.ResponseWriter, r *http.Request)
 	userID, err := strconv.Atoi(vars["user_id"])
 	if err != nil {
 		jsonError(err, w, r)
+		return
+	}
+
+	if float64(userID) != s.currentUserID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
 		return
 	}
 
@@ -40,6 +47,12 @@ func (s *server) payPeriodsShowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if float64(userID) != s.currentUserID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
+		return
+	}
+
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		jsonError(err, w, r)
@@ -63,6 +76,12 @@ func (s *server) payPeriodsUpdateHandler(w http.ResponseWriter, r *http.Request)
 	userID, err := strconv.Atoi(vars["user_id"])
 	if err != nil {
 		jsonError(err, w, r)
+		return
+	}
+
+	if float64(userID) != s.currentUserID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
 		return
 	}
 
@@ -98,6 +117,12 @@ func (s *server) payPeriodsDeleteHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	if float64(userID) != s.currentUserID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
+		return
+	}
+
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		jsonError(err, w, r)
@@ -119,6 +144,12 @@ func (s *server) payPeriodsIndexHandler(w http.ResponseWriter, r *http.Request) 
 	userID, err := strconv.Atoi(vars["user_id"])
 	if err != nil {
 		jsonError(err, w, r)
+		return
+	}
+
+	if float64(userID) != s.currentUserID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
 		return
 	}
 

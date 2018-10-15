@@ -6,8 +6,9 @@ import (
 )
 
 type server struct {
-	db     *sql.DB
-	router *mux.Router
+	db            *sql.DB
+	router        *mux.Router
+	currentUserID float64
 }
 
 func (s *server) init() {

@@ -66,6 +66,8 @@ func (s *server) validateTokenMiddleware(next http.HandlerFunc) http.HandlerFunc
 		}
 
 		if token.Valid {
+			claims := token.Claims.(jwt.MapClaims)
+			s.currentUserID = claims["userID"].(float64)
 			next.ServeHTTP(w, r)
 		} else {
 			jsonUnauthorized(err, w, r)

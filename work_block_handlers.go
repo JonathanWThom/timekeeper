@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	// "errors"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -27,6 +28,12 @@ func (s *server) workBlocksCreateHandler(w http.ResponseWriter, r *http.Request)
 		jsonError(err, w, r)
 		return
 	}
+	//
+	// if float64(workBlock.UserID) != s.currentUserID {
+	// 	err = errors.New("Unauthorized")
+	// 	jsonUnauthorized(err, w, r)
+	// 	return
+	// }
 
 	hours, err := workBlock.hours()
 	if err != nil {

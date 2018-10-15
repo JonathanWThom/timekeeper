@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	// "errors"
+	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -28,12 +28,18 @@ func (s *server) workBlocksCreateHandler(w http.ResponseWriter, r *http.Request)
 		jsonError(err, w, r)
 		return
 	}
-	//
-	// if float64(workBlock.UserID) != s.currentUserID {
-	// 	err = errors.New("Unauthorized")
-	// 	jsonUnauthorized(err, w, r)
-	// 	return
-	// }
+
+	userID, err := workBlock.userID(s)
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	if s.currentUserID != userID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
+		return
+	}
 
 	hours, err := workBlock.hours()
 	if err != nil {
@@ -72,6 +78,18 @@ func (s *server) workBlocksShowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userID, err := workBlock.userID(s)
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	if s.currentUserID != userID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
+		return
+	}
+
 	err = s.showWorkBlock(&workBlock)
 	if err != nil {
 		jsonError(err, w, r)
@@ -100,6 +118,18 @@ func (s *server) workBlocksUpdateHandler(w http.ResponseWriter, r *http.Request)
 	err = json.NewDecoder(r.Body).Decode(&workBlock)
 	if err != nil {
 		jsonError(err, w, r)
+		return
+	}
+
+	userID, err := workBlock.userID(s)
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	if s.currentUserID != userID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
 		return
 	}
 
@@ -136,6 +166,18 @@ func (s *server) workBlocksDeleteHandler(w http.ResponseWriter, r *http.Request)
 
 	workBlock := WorkBlock{PayPeriodID: int(payPeriodID), ID: int(id)}
 
+	userID, err := workBlock.userID(s)
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	if s.currentUserID != userID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
+		return
+	}
+
 	err = s.deleteWorkBlock(&workBlock)
 	if err != nil {
 		jsonError(err, w, r)
@@ -151,6 +193,19 @@ func (s *server) workBlocksIndexHandler(w http.ResponseWriter, r *http.Request) 
 	payPeriodID, err := strconv.Atoi(vars["pay_period_id"])
 	if err != nil {
 		jsonError(err, w, r)
+		return
+	}
+
+	payPeriod := PayPeriod{ID: payPeriodID}
+	userID, err := payPeriod.userID(s)
+	if err != nil {
+		jsonError(err, w, r)
+		return
+	}
+
+	if s.currentUserID != userID {
+		err = errors.New("Unauthorized")
+		jsonUnauthorized(err, w, r)
 		return
 	}
 

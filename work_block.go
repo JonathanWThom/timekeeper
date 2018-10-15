@@ -12,6 +12,21 @@ type WorkBlock struct {
 	EndedAt     string  `json:"ended_at" db:"ended_at"`     // stored as timestamp in db
 }
 
+func (w *WorkBlock) userID(s *server) (float64, error) {
+	sql := `
+		SELECT user_id
+		FROM pay_periods
+		WHERE id=$1
+	`
+	var userID float64
+	err := s.db.QueryRow(sql, w.PayPeriodID).Scan(&userID)
+	if err != nil {
+		return 0, err
+	}
+
+	return userID, nil
+}
+
 func (w *WorkBlock) hours() (float64, error) {
 	layout := "2006-01-02T15:04:05.000Z"
 	end, err := time.Parse(layout, w.EndedAt)

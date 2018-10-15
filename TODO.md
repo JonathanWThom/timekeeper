@@ -2,6 +2,7 @@
   - Could break everything into packages - models, handlers, store, etc
 
 * Add jwt auth for resources and _only_ return resource for proper user
+  - Currently working on doing this for work blocks
 
 * Tests.
 

@@ -1,4 +1,13 @@
-* Tests. I really should test this time, at the very least, for the learning experience.
+* Make project structure not flat?
+  - Could break everything into packages - models, handlers, store, etc
+
+* Tests.
+
+* Add more necessary db indexes.
+
+* Account for cascading?
+
+* Should projects belong to users too?
 
 * Handle nil values being sent to update actions
 
@@ -16,5 +25,3 @@
 on par with other actions?
   - PayPeriodsIndexHandler
     1. Should ID be part of an object instead of an argument?
-
-* Should projects be limited by user, or user group maybe?

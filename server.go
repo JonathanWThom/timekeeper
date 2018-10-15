@@ -22,6 +22,7 @@ func (s *server) init() {
 	}
 
 	s.db = db
+	s.initKeys()
 	s.router = mux.NewRouter()
 	s.routes()
 }

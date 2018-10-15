@@ -17,10 +17,13 @@ CREATE OR REPLACE FUNCTION ValidEnd(ended_at TIMESTAMP, pay_period_id INT) RETUR
 $$ LANGUAGE plpgsql;
 
 CREATE TABLE users (
-  id SERIAL PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    username text NOT NULL UNIQUE,
+    password text NOT NULL
 );
 
 CREATE UNIQUE INDEX users_pkey ON users(id int4_ops);
+CREATE UNIQUE INDEX users_username_key ON users(username text_ops);
 
 CREATE TABLE pay_periods (
   id SERIAL PRIMARY KEY,

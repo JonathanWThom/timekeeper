@@ -25,11 +25,10 @@ func (s *server) routes() {
 
 	// Users
 	s.router.HandleFunc("/users", s.usersCreateHandler).Methods("POST")
-	// 	s.router.HandleFunc("/users/{id}", s.usersShowHandler).Methods("GET")
 	// 	s.router.HandleFunc("/users/{id}", s.usersUpdateHandler).Methods("PATCH")
 	// 	s.router.HandleFunc("/users/{id}", s.usersDeleteHandler).Methods("DELETE")
 
 	// Sessions
-	// s.router.HandleFunc("/sessions", s.sessionsCreateHandler).Methods("POST")
+	s.router.HandleFunc("/sessions", s.sessionsCreateHandler).Methods("POST")
 	// s.router.HandleFunc("/sessions", s.sessionsDeleteHandler).Methods("DELETE")
 }

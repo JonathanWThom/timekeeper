@@ -22,3 +22,32 @@ func (s *server) createUser(user *User) error {
 
 	return nil
 }
+
+func (s *server) showUser(user *User) error {
+	sql := `
+		SELECT password, id, username
+		FROM users
+		WHERE username=$1;
+	`
+	var storedPassword string
+
+	err := s.db.QueryRow(
+		sql,
+		user.Username).
+		Scan(
+			&storedPassword,
+			&user.ID,
+			&user.Username)
+	if err != nil {
+		return err
+	}
+
+	err = bcrypt.CompareHashAndPassword(
+		[]byte(storedPassword),
+		[]byte(user.Password))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

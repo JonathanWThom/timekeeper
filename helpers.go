@@ -22,3 +22,8 @@ func jsonError(err error, w http.ResponseWriter, r *http.Request) {
 	http.Error(w, err.Error(), http.StatusInternalServerError)
 	log.Printf("Handling %q: %v", r.RequestURI, err)
 }
+
+func jsonUnauthorized(err error, w http.ResponseWriter, r *http.Request) {
+	http.Error(w, err.Error(), http.StatusUnauthorized)
+	log.Printf("Handling %q: %v", r.RequestURI, err)
+}

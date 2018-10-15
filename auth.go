@@ -3,8 +3,10 @@ package main
 import (
 	"crypto/rsa"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -49,4 +51,25 @@ func (s *server) initKeys() {
 		log.Fatalf("[publicKey]: %s\n", err)
 		panic(err)
 	}
+}
+
+func (s *server) validateTokenMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
+			func(token *jwt.Token) (interface{}, error) {
+				return verifyKey, nil
+			})
+
+		if err != nil {
+			jsonUnauthorized(err, w, r)
+			return
+		}
+
+		if token.Valid {
+			next.ServeHTTP(w, r)
+		} else {
+			jsonUnauthorized(err, w, r)
+			return
+		}
+	})
 }

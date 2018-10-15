@@ -6,7 +6,9 @@ func (s *server) routes() {
 	s.router.HandleFunc("/projects/{id}", s.projectsShowHandler).Methods("GET")
 	s.router.HandleFunc("/projects/{id}", s.projectsUpdateHandler).Methods("PATCH")
 	s.router.HandleFunc("/projects/{id}", s.projectsDeleteHandler).Methods("DELETE")
-	s.router.HandleFunc("/projects", s.projectsIndexHandler).Methods("GET")
+	s.router.HandleFunc("/projects", s.validateTokenMiddleware(s.projectsIndexHandler)).Methods("GET")
+	// only use for some routes
+	//s.router.Use(s.validateTokenMiddleware)
 
 	// PayPeriods
 	s.router.HandleFunc("/users/{user_id}/pay_periods", s.payPeriodsCreateHandler).Methods("POST")
@@ -30,5 +32,7 @@ func (s *server) routes() {
 
 	// Sessions
 	s.router.HandleFunc("/sessions", s.sessionsCreateHandler).Methods("POST")
-	// s.router.HandleFunc("/sessions", s.sessionsDeleteHandler).Methods("DELETE")
+
+	// CSV
+	// could also live under other resources, probably pay periods
 }

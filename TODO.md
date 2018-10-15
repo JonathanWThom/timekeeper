@@ -1,6 +1,8 @@
 * Make project structure not flat?
   - Could break everything into packages - models, handlers, store, etc
 
+* Add jwt auth for resources and _only_ return resource for proper user
+
 * Tests.
 
 * Add more necessary db indexes.

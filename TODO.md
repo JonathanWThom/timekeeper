@@ -1,12 +1,13 @@
-* Make project structure not flat?
-  - Could break everything into packages - models, handlers, store, etc
+## Stories
 
 * Should projects belong to users too?
 
-* Update users
+* Update/delete users
 
 * CSV
 
+
+## Tech Debt
 * Tests.
 
 * Add more necessary db indexes.
@@ -25,3 +26,6 @@
 on par with other actions?
   - PayPeriodsIndexHandler
     1. Should ID be part of an object instead of an argument?
+
+* Make project structure not flat?
+  - Could break everything into packages - models, handlers, store, etc

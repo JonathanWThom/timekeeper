@@ -6,12 +6,12 @@ import (
 
 func (s *server) createProject(project *Project) error {
 	sql := `
-		INSERT INTO projects(name, code)
-		VALUES($1, $2)
-		RETURNING id, name, code
+		INSERT INTO projects(name, code, user_id)
+		VALUES($1, $2, $3)
+		RETURNING id, name, code, user_id
 	`
-	err := s.db.QueryRow(sql, project.Name, project.Code).
-		Scan(&project.ID, &project.Name, &project.Code)
+	err := s.db.QueryRow(sql, project.Name, project.Code, project.UserID).
+		Scan(&project.ID, &project.Name, &project.Code, &project.UserID)
 	if err != nil {
 		return err
 	}
@@ -21,12 +21,13 @@ func (s *server) createProject(project *Project) error {
 
 func (s *server) showProject(project *Project) error {
 	sql := `
-		SELECT id, name, code
+		SELECT id, name, code, user_id
 		FROM projects
 		WHERE id=$1
+		AND user_id=$2
 	`
-	err := s.db.QueryRow(sql, project.ID).
-		Scan(&project.ID, &project.Name, &project.Code)
+	err := s.db.QueryRow(sql, project.ID, project.UserID).
+		Scan(&project.ID, &project.Name, &project.Code, &project.UserID)
 	if err != nil {
 		return err
 	}
@@ -41,10 +42,11 @@ func (s *server) updateProject(project *Project) error {
 		UPDATE projects
 		SET name=$1, code=$2
 		WHERE id=$3
-		RETURNING id, name, code
+		AND user_id=$4
+		RETURNING id, name, code, user_id
 	`
-	err := s.db.QueryRow(sql, project.Name, project.Code, project.ID).
-		Scan(&project.ID, &project.Name, &project.Code)
+	err := s.db.QueryRow(sql, project.Name, project.Code, project.ID, project.UserID).
+		Scan(&project.ID, &project.Name, &project.Code, &project.UserID)
 	if err != nil {
 		return err
 	}
@@ -56,10 +58,11 @@ func (s *server) deleteProject(project *Project) error {
 	sql := `
 		DELETE FROM projects
 		WHERE id=$1
-		RETURNING id, name, code
+		AND user_id=$2
+		RETURNING id, name, code, user_id
 	`
-	err := s.db.QueryRow(sql, project.ID).
-		Scan(&project.ID, &project.Name, &project.Code)
+	err := s.db.QueryRow(sql, project.ID, project.UserID).
+		Scan(&project.ID, &project.Name, &project.Code, &project.UserID)
 	if err != nil {
 		return err
 	}
@@ -67,12 +70,13 @@ func (s *server) deleteProject(project *Project) error {
 	return nil
 }
 
-func (s *server) indexProjects() ([]Project, error) {
+func (s *server) indexProjects(userID int) ([]Project, error) {
 	sql := `
-		SELECT id, name, code
+		SELECT id, name, code, user_id
 		FROM projects
+		WHERE user_id=$1
 	`
-	rows, err := s.db.Query(sql)
+	rows, err := s.db.Query(sql, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +85,7 @@ func (s *server) indexProjects() ([]Project, error) {
 	var projects = []Project{}
 	for rows.Next() {
 		project := Project{}
-		err := rows.Scan(&project.ID, &project.Name, &project.Code)
+		err := rows.Scan(&project.ID, &project.Name, &project.Code, &project.UserID)
 		if err != nil {
 			return nil, err
 		}

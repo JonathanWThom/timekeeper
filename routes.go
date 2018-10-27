@@ -3,27 +3,25 @@ package main
 func (s *server) routes() {
 	// Projects
 	s.router.HandleFunc(
-		"/projects",
+		"/users/{user_id}/projects",
 		s.validateTokenMiddleware(s.projectsCreateHandler)).
 		Methods("POST")
 	s.router.HandleFunc(
-		"/projects/{id}",
+		"/users/{user_id}/projects/{id}",
 		s.validateTokenMiddleware(s.projectsShowHandler)).
 		Methods("GET")
 	s.router.HandleFunc(
-		"/projects/{id}",
+		"/users/{user_id}/projects/{id}",
 		s.validateTokenMiddleware(s.projectsUpdateHandler)).
 		Methods("PATCH")
 	s.router.HandleFunc(
-		"/projects/{id}",
+		"/users/{user_id}/projects/{id}",
 		s.validateTokenMiddleware(s.projectsDeleteHandler)).
 		Methods("DELETE")
 	s.router.HandleFunc(
-		"/projects",
+		"/users/{user_id}/projects",
 		s.validateTokenMiddleware(s.projectsIndexHandler)).
 		Methods("GET")
-	// only use for some routes
-	//s.router.Use(s.validateTokenMiddleware)
 
 	// PayPeriods
 	s.router.HandleFunc(

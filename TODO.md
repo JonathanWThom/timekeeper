@@ -1,20 +1,17 @@
 * Make project structure not flat?
   - Could break everything into packages - models, handlers, store, etc
 
-* Add jwt auth for resources and _only_ return resource for proper user
-  - Currently working on doing this for work blocks
+* Should projects belong to users too?
+
+* Update users
+
+* CSV
 
 * Tests.
 
 * Add more necessary db indexes.
 
-* Account for cascading?
-
-* Should projects belong to users too?
-
 * Handle nil values being sent to update actions
-
-* UUID and "sessions"/jwt for users.
 
 * UUID for all id values.
 

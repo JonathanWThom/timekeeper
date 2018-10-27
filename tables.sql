@@ -29,7 +29,7 @@ CREATE TABLE pay_periods (
   id SERIAL PRIMARY KEY,
   started_at timestamp without time zone NOT NULL,
   ended_at timestamp without time zone NOT NULL,
-  user_id integer NOT NULL REFERENCES users(id),
+  user_id integer NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT started_before_ended_check CHECK (started_at < ended_at)
 );
 
@@ -38,16 +38,19 @@ CREATE UNIQUE INDEX pay_periods_pkey ON pay_periods(id int4_ops);
 CREATE TABLE projects (
   id SERIAL PRIMARY KEY,
   name text NOT NULL UNIQUE CHECK (name <> ''::text),
-  code text NOT NULL UNIQUE CHECK (code <> ''::text)
+  code text NOT NULL UNIQUE CHECK (code <> ''::text),
+	user_id integer REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE UNIQUE INDEX projects_pkey ON projects(id int4_ops);
+CREATE UNIQUE INDEX projects_name_key ON projects(name text_ops);
+CREATE UNIQUE INDEX projects_code_key ON projects(code text_ops);
 
 -- work_blocks joins pay_periods and projects --
 CREATE TABLE work_blocks (
   id SERIAL PRIMARY KEY,
-  project_id integer NOT NULL REFERENCES projects(id),
-  pay_period_id integer NOT NULL REFERENCES pay_periods(id),
+	project_id integer NOT NULL REFERENCES projects(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	pay_period_id integer NOT NULL REFERENCES pay_periods(id) ON DELETE CASCADE ON UPDATE CASCADE,
   hours numeric NOT NULL,
   started_at timestamp without time zone NOT NULL,
   ended_at timestamp without time zone NOT NULL,

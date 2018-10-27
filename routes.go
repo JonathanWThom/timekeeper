@@ -33,7 +33,6 @@ func (s *server) routes() {
 		s.validateTokenMiddleware(s.payPeriodsShowHandler)).
 		Methods("GET")
 	s.router.HandleFunc(
-
 		"/users/{user_id}/pay_periods/{id}",
 		s.validateTokenMiddleware(s.payPeriodsUpdateHandler)).
 		Methods("PATCH")

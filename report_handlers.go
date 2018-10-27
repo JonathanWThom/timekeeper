@@ -24,13 +24,14 @@ func (s *server) reportsShowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	payPeriod.UserID = int(userID)
 	if s.currentUserID != userID {
 		err = errors.New("Unauthorized")
 		jsonUnauthorized(err, w, r)
 		return
 	}
 
-	path, err := payPeriod.generateReport()
+	path, err := payPeriod.generateReport(s)
 	if err != nil {
 		jsonError(err, w, r)
 		return

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/csv"
-	"log"
 	"os"
 )
 
@@ -28,12 +27,21 @@ func (p *PayPeriod) userID(s *server) (float64, error) {
 	return float64(p.UserID), nil
 }
 
-func (p *PayPeriod) generateReport() (string, error) {
+func (p *PayPeriod) generateReport(s *server) (string, error) {
+	err := s.showPayPeriod(p)
+	if err != nil {
+		return "", err
+	}
+	// name := p.User.Name
+	name := "Laura Syvertson"
 
-	// this date will be fill in by db values eventually
+	start := p.StartedAt[:10]
+	end := p.EndedAt[:10]
+	period := start + " - " + end
+
 	records := [][]string{
-		{"Name", "Laura Syvertson"},
-		{"Payroll Period", "03-09-2018 - 03-23-2018"},
+		{"Name", name},
+		{"Payroll Period", period},
 		{"", "", "Date:", "3/9", "3/10", "3/11", "3/12", "3/13", "3/14", "3/15", "3/16", "3/17", "3/18", "3/19", "3/20", "3/21", "3/22", "3/23", "Totals"},
 	}
 
@@ -49,15 +57,13 @@ func (p *PayPeriod) generateReport() (string, error) {
 
 	for _, record := range records {
 		if err := w.Write(record); err != nil {
-			log.Fatalln("error writing record to csv:", err)
+			return "", err
 		}
 	}
 
-	// Write any buffered data to the underlying writer (standard output).
 	w.Flush()
-
 	if err := w.Error(); err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	return "test.csv", nil

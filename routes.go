@@ -83,6 +83,9 @@ func (s *server) routes() {
 		s.sessionsCreateHandler).
 		Methods("POST")
 
-	// CSV
-	// could also live under other resources, probably pay periods
+		// Reports
+	s.router.HandleFunc(
+		"/pay_periods/{pay_period_id}/report",
+		s.validateTokenMiddleware(s.reportsShowHandler)).
+		Methods("GET")
 }

@@ -33,15 +33,50 @@ func (p *PayPeriod) generateReport(s *server) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	// name := p.User.Name
-	name := "Laura Syvertson"
 
-	start := p.StartedAt[:10]
-	end := p.EndedAt[:10]
-	period := start + " - " + end
+	records, err := p.buildCsv()
+	if err != nil {
+		return "", err
+	}
+
+	file, _ := os.OpenFile("report.csv", os.O_CREATE|os.O_WRONLY, 0777)
+	defer file.Close()
+	w := csv.NewWriter(file)
+	w.WriteAll(records)
+	if err := w.Error(); err != nil {
+		return "", err
+	}
+
+	return "report.csv", nil
+}
+
+func (p *PayPeriod) buildCsv() ([][]string, error) {
+	name := "Laura Syvertson" // eventually p.User.Name
+	period := p.getPeriod()
+	dates, err := p.getDatesRow()
+	if err != nil {
+		return [][]string{}, nil
+	}
+
+	records := [][]string{
+		{"Name", name},
+		{"Payroll Period", period},
+		dates,
+	}
+
+	return records, nil
+}
+
+func (p *PayPeriod) getDatesRow() ([]string, error) {
 	layout := "2006-01-02T15:04:05Z"
-	parsedStart, _ := time.Parse(layout, p.StartedAt)
-	parsedEnd, _ := time.Parse(layout, p.EndedAt)
+	parsedStart, err := time.Parse(layout, p.StartedAt)
+	if err != nil {
+		return []string{}, err
+	}
+	parsedEnd, err := time.Parse(layout, p.EndedAt)
+	if err != nil {
+		return []string{}, err
+	}
 	dateToPrint := parsedStart
 	dates := []string{"", "", "Date:", dateToPrint.Format("1/2")}
 
@@ -50,21 +85,12 @@ func (p *PayPeriod) generateReport(s *server) (string, error) {
 		dates = append(dates, dateToPrint.Format("1/2"))
 	}
 	dates = append(dates, "Totals")
-	records := [][]string{
-		{"Name", name},
-		{"Payroll Period", period},
-		dates,
-	}
 
-	// make sure this gets overwritten
-	file, _ := os.OpenFile("report.csv", os.O_CREATE|os.O_WRONLY, 0777)
-	defer file.Close()
+	return dates, nil
+}
 
-	w := csv.NewWriter(file)
-	w.WriteAll(records)
-	if err := w.Error(); err != nil {
-		return "", err
-	}
-
-	return "report.csv", nil
+func (p *PayPeriod) getPeriod() string {
+	start := p.StartedAt[:10]
+	end := p.EndedAt[:10]
+	return start + " - " + end
 }

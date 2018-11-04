@@ -51,32 +51,35 @@ func (p *PayPeriod) generateReport(s *server) (string, error) {
 }
 
 func (p *PayPeriod) buildCsv() ([][]string, error) {
+	period := make(chan string, 1)
+	dateRow := make(chan []string, 1)
+
 	name := "Laura Syvertson" // eventually p.User.Name
-	period := p.getPeriod()
-	dates, err := p.getDatesRow()
-	if err != nil {
-		return [][]string{}, nil
-	}
+	go p.getPeriod(period)
+	go p.getDatesRow(dateRow)
+	// if err != nil {
+	// 	return [][]string{}, nil
+	// }
 
 	records := [][]string{
 		{"Name", name},
-		{"Payroll Period", period},
-		dates,
+		{"Payroll Period", <-period},
+		<-dateRow,
 	}
 
 	return records, nil
 }
 
-func (p *PayPeriod) getDatesRow() ([]string, error) {
+func (p *PayPeriod) getDatesRow(c chan<- []string) {
 	layout := "2006-01-02T15:04:05Z"
-	parsedStart, err := time.Parse(layout, p.StartedAt)
-	if err != nil {
-		return []string{}, err
-	}
-	parsedEnd, err := time.Parse(layout, p.EndedAt)
-	if err != nil {
-		return []string{}, err
-	}
+	parsedStart, _ := time.Parse(layout, p.StartedAt)
+	// if err != nil {
+	// 	return []string{}, err
+	// }
+	parsedEnd, _ := time.Parse(layout, p.EndedAt)
+	// if err != nil {
+	// 	return []string{}, err
+	// }
 	dateToPrint := parsedStart
 	dates := []string{"", "", "Date:", dateToPrint.Format("1/2")}
 
@@ -86,11 +89,9 @@ func (p *PayPeriod) getDatesRow() ([]string, error) {
 	}
 	dates = append(dates, "Totals")
 
-	return dates, nil
+	c <- dates
 }
 
-func (p *PayPeriod) getPeriod() string {
-	start := p.StartedAt[:10]
-	end := p.EndedAt[:10]
-	return start + " - " + end
+func (p *PayPeriod) getPeriod(c chan<- string) {
+	c <- p.StartedAt[:10] + " - " + p.EndedAt[:10]
 }

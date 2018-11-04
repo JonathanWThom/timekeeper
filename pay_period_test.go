@@ -42,3 +42,14 @@ func TestBuildCsv(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkBuildCsv(b *testing.B) {
+	p := &PayPeriod{
+		StartedAt: "2018-03-09T00:00:00Z",
+		EndedAt:   "2018-03-16T00:00:00Z",
+	}
+
+	for i := 0; i < b.N; i++ {
+		p.buildCsv()
+	}
+}

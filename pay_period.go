@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"os"
+	"time"
 )
 
 // PayPeriod lives on the pay_periods table
@@ -38,33 +39,32 @@ func (p *PayPeriod) generateReport(s *server) (string, error) {
 	start := p.StartedAt[:10]
 	end := p.EndedAt[:10]
 	period := start + " - " + end
+	layout := "2006-01-02T15:04:05Z"
+	parsedStart, _ := time.Parse(layout, p.StartedAt)
+	parsedEnd, _ := time.Parse(layout, p.EndedAt)
+	dateToPrint := parsedStart
+	dates := []string{"", "", "Date:", dateToPrint.Format("1/2")}
 
+	for dateToPrint.Before(parsedEnd) {
+		dateToPrint = dateToPrint.AddDate(0, 0, 1)
+		dates = append(dates, dateToPrint.Format("1/2"))
+	}
+	dates = append(dates, "Totals")
 	records := [][]string{
 		{"Name", name},
 		{"Payroll Period", period},
-		{"", "", "Date:", "3/9", "3/10", "3/11", "3/12", "3/13", "3/14", "3/15", "3/16", "3/17", "3/18", "3/19", "3/20", "3/21", "3/22", "3/23", "Totals"},
+		dates,
 	}
 
-	// for _, block := range payPeriod.workPeriods {
-	// 	record := []string{"eenie", "meenie", "minie", "mo"}
-	// 	records = append(records, record)
-	// }
-
-	file, _ := os.OpenFile("test.csv", os.O_CREATE|os.O_WRONLY, 0777)
+	// make sure this gets overwritten
+	file, _ := os.OpenFile("report.csv", os.O_CREATE|os.O_WRONLY, 0777)
 	defer file.Close()
 
 	w := csv.NewWriter(file)
-
-	for _, record := range records {
-		if err := w.Write(record); err != nil {
-			return "", err
-		}
-	}
-
-	w.Flush()
+	w.WriteAll(records)
 	if err := w.Error(); err != nil {
 		return "", err
 	}
 
-	return "test.csv", nil
+	return "report.csv", nil
 }

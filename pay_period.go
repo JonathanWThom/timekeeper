@@ -96,8 +96,10 @@ func (p *PayPeriod) getDatesRow(c chan<- []string, errs chan<- error) {
 
 	errs <- nil
 	c <- dates
+	close(c)
 }
 
 func (p *PayPeriod) getPeriod(c chan<- string) {
 	c <- p.StartedAt[:10] + " - " + p.EndedAt[:10]
+	close(c)
 }

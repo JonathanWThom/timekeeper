@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -38,4 +39,8 @@ func (s *server) reportsShowHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.ServeFile(w, r, path)
+	err = os.Remove(path)
+	if err != nil {
+		jsonError(err, w, r)
+	}
 }

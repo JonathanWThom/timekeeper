@@ -53,11 +53,13 @@ func (p *PayPeriod) generateReport(s *server) (string, error) {
 func (p *PayPeriod) buildCsv() ([][]string, error) {
 	period := make(chan string, 1)
 	dateRow := make(chan []string, 1)
+	projHeaderRow := make(chan []string, 1)
 	errs := make(chan error, 1)
 
 	name := "Laura Syvertson" // eventually p.User.Name
 	go p.getPeriod(period)
 	go p.getDatesRow(dateRow, errs)
+	go p.getProjHeaderRow(projHeaderRow, errs)
 
 	err := <-errs
 	if err != nil {
@@ -68,19 +70,14 @@ func (p *PayPeriod) buildCsv() ([][]string, error) {
 		{"Name", name},
 		{"Payroll Period", <-period},
 		<-dateRow,
+		<-projHeaderRow,
 	}
 
 	return records, nil
 }
 
 func (p *PayPeriod) getDatesRow(c chan<- []string, errs chan<- error) {
-	layout := "2006-01-02T15:04:05Z"
-	parsedStart, err := time.Parse(layout, p.StartedAt)
-	if err != nil {
-		errs <- err
-		return
-	}
-	parsedEnd, err := time.Parse(layout, p.EndedAt)
+	parsedStart, parsedEnd, err := p.getDates()
 	if err != nil {
 		errs <- err
 		return
@@ -99,7 +96,40 @@ func (p *PayPeriod) getDatesRow(c chan<- []string, errs chan<- error) {
 	close(c)
 }
 
+func (p *PayPeriod) getDates() (time.Time, time.Time, error) {
+	layout := "2006-01-02T15:04:05Z"
+	parsedStart, err := time.Parse(layout, p.StartedAt)
+	if err != nil {
+		return time.Time{}, time.Time{}, err
+	}
+	parsedEnd, err := time.Parse(layout, p.EndedAt)
+	if err != nil {
+		return time.Time{}, time.Time{}, err
+	}
+
+	return parsedStart, parsedEnd, nil
+}
+
 func (p *PayPeriod) getPeriod(c chan<- string) {
 	c <- p.StartedAt[:10] + " - " + p.EndedAt[:10]
+	close(c)
+}
+
+func (p *PayPeriod) getProjHeaderRow(c chan<- []string, errs chan<- error) {
+	row := []string{"Proj #", "Project Name", "Service Item"}
+	parsedStart, parsedEnd, err := p.getDates()
+	if err != nil {
+		errs <- err
+		return
+	}
+
+	dateToPrint := parsedStart
+	for dateToPrint.Before(parsedEnd) {
+		dateToPrint = dateToPrint.AddDate(0, 0, 1)
+		wkday := dateToPrint.Format("Mon")
+		row = append(row, wkday)
+	}
+
+	c <- row
 	close(c)
 }

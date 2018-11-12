@@ -12,22 +12,24 @@ func TestBuildCsv(t *testing.T) {
 	}
 
 	tests := []struct {
-		payPeriod *PayPeriod
-		nameRow   []string
-		periodRow []string
-		dateRow   []string
+		payPeriod     *PayPeriod
+		nameRow       []string
+		periodRow     []string
+		dateRow       []string
+		projHeaderRow []string
 	}{
 		{
 			p,
 			[]string{"Name", "Laura Syvertson"},
 			[]string{"Payroll Period", "2018-03-09 - 2018-03-16"},
 			[]string{"", "", "Date:", "3/9", "3/10", "3/11", "3/12", "3/13", "3/14", "3/15", "3/16", "Totals"},
+			[]string{"Proj #", "Project Name", "Service Item", "Sat", "Sun", "Mon", "Tues", "Wed", "Thu", "Fri"},
 		},
 	}
 
 	for _, test := range tests {
 		records, _ := test.payPeriod.buildCsv()
-		nameRow, periodRow, dateRow := records[0], records[1], records[2]
+		nameRow, periodRow, dateRow, projHeaderRow := records[0], records[1], records[2], records[3]
 
 		if !reflect.DeepEqual(nameRow, test.nameRow) {
 			t.Errorf("Name Row was incorrect, expected %v, got %v", nameRow, test.nameRow)
@@ -39,6 +41,11 @@ func TestBuildCsv(t *testing.T) {
 
 		if !reflect.DeepEqual(dateRow, test.dateRow) {
 			t.Errorf("Date Row was incorrect, expected %v, got %v", dateRow, test.dateRow)
+		}
+
+		if !reflect.DeepEqual(dateRow, test.dateRow) {
+			t.Errorf("Project Header Row was incorrect, expected %v, got %v",
+				projHeaderRow, test.projHeaderRow)
 		}
 	}
 }

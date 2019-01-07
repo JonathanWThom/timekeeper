@@ -1,21 +1,5 @@
 CREATE DATABASE timekeeper;
 
-CREATE OR REPLACE FUNCTION ValidStart(started_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
-	DECLARE started_at DATE;
-    BEGIN
-  		SELECT pay_periods.started_at INTO started_at FROM pay_periods WHERE id=$2;
-        RETURN started_at <= $1;
-    END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION ValidEnd(ended_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
-	DECLARE ended_at DATE;
-    BEGIN
-  		SELECT pay_periods.ended_at INTO ended_at FROM pay_periods WHERE id=$2;
-        RETURN $1 <= ended_at;
-    END;
-$$ LANGUAGE plpgsql;
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username text NOT NULL UNIQUE,
@@ -45,6 +29,22 @@ CREATE TABLE projects (
 CREATE UNIQUE INDEX projects_pkey ON projects(id int4_ops);
 CREATE UNIQUE INDEX projects_name_key ON projects(name text_ops);
 CREATE UNIQUE INDEX projects_code_key ON projects(code text_ops);
+
+CREATE OR REPLACE FUNCTION ValidStart(started_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
+	DECLARE started_at DATE;
+    BEGIN
+  		SELECT pay_periods.started_at INTO started_at FROM pay_periods WHERE id=$2;
+        RETURN started_at <= $1;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION ValidEnd(ended_at TIMESTAMP, pay_period_id INT) RETURNS BOOLEAN AS $$
+	DECLARE ended_at DATE;
+    BEGIN
+  		SELECT pay_periods.ended_at INTO ended_at FROM pay_periods WHERE id=$2;
+        RETURN $1 <= ended_at;
+    END;
+$$ LANGUAGE plpgsql;
 
 -- work_blocks joins pay_periods and projects --
 CREATE TABLE work_blocks (

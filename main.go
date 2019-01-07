@@ -7,6 +7,6 @@ import (
 
 func main() {
 	var s server
-	s.init()
+	s.init("timekeeper")
 	log.Fatal(http.ListenAndServe(":8000", s.router))
 }

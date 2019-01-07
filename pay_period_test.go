@@ -9,7 +9,9 @@ func TestBuildCsv(t *testing.T) {
 	p := &PayPeriod{
 		StartedAt: "2018-03-09T00:00:00Z",
 		EndedAt:   "2018-03-16T00:00:00Z",
+		ID:        3,
 	}
+	// need to stub out the payPeriod's workBlocks and db connection
 
 	tests := []struct {
 		payPeriod     *PayPeriod
@@ -27,8 +29,11 @@ func TestBuildCsv(t *testing.T) {
 		},
 	}
 
+	var s server
+	s.init("timekeeper_test")
+
 	for _, test := range tests {
-		records, _ := test.payPeriod.buildCsv()
+		records, _ := test.payPeriod.buildCsv(&s)
 		nameRow, periodRow, dateRow, projHeaderRow := records[0], records[1], records[2], records[3]
 
 		if !reflect.DeepEqual(nameRow, test.nameRow) {
@@ -56,7 +61,13 @@ func BenchmarkBuildCsv(b *testing.B) {
 		EndedAt:   "2018-03-16T00:00:00Z",
 	}
 
+	var s server
+	s.init("timekeeper_test")
 	for i := 0; i < b.N; i++ {
-		p.buildCsv()
+		p.buildCsv(&s)
 	}
+}
+
+func setUpTearDownDb() {
+	// TODO
 }

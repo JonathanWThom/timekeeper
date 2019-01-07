@@ -11,8 +11,8 @@ type server struct {
 	currentUserID float64
 }
 
-func (s *server) init() {
-	db, err := sql.Open("postgres", "dbname=timekeeper sslmode=disable")
+func (s *server) init(dbName string) {
+	db, err := sql.Open("postgres", "dbname="+dbName+" sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
